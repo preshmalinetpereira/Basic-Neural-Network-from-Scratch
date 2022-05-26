@@ -8,10 +8,14 @@ The project uses vectorization to implement forward and backward propagation to 
 
 Set following hyperparameters in `proj.py`
 
-`lambd` --> Lambda or Regularization constant
-`alpha` --> Alpha or Learning rate 
-`eval` --> 3 options: `"":to run main program`, `cost: Run cost anlaysis`
-`epochs` --> Set epoch value
+```
+lambd --> Lambda or Regularization constant
+alpha --> Alpha or Learning rate 
+eval --> '' or cost
+'': to run main program
+cost: Run cost anlaysis
+epochs --> Set epoch value
+```
 For `eval: cost`
 set the `network` value like: `[2, 4, 3, 2]`
 
