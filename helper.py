@@ -17,13 +17,11 @@ def activation_forward(A_p, W, bias, verbose=False):
 
 
 def forward(X, parameters, n_features, verbose=False):
-    # cols = X.shape[1]
-    # rows = 
     A = X                           
     caches = []                     
     L = len(parameters)
     if verbose: print("Forward propagating through vectorization\n\n")        
-    A = np.insert(A, 0, 1,1) # parameters["b" + str(0)]
+    A = np.insert(A, 0, 1,1) 
     if verbose: print("A :\n{}".format(A), end="\n")
 
     for l in range(L):
@@ -45,7 +43,6 @@ def backward(AL, y, lambd, caches, verbose=False):
     if verbose: print("Running backpropagation through vectorization\n\n") 
     n = len(y)
     L = len(caches)
-    # grads = {}
     deltas = {}
     D ={}
     P={}
@@ -93,12 +90,8 @@ def backward(AL, y, lambd, caches, verbose=False):
 
 def update_parameters(parameters, grads, alpha, verbose=False):
     L = len(parameters) 
-    
     for l in range(1, L+1):
-        
         parameters["W" + str(l)] = parameters["W" + str(l)] - np.multiply(alpha,grads[str(l)])
-        # if verbose: print("Final regularized gradients of Theta_{}: {}".format(l, parameters["W" + str(l)]))
-            
     return parameters
 
 
@@ -124,10 +117,6 @@ def cost_fn(y_pred, y_true, caches, lambd, verbose=False, train=True):
         curr_cost = -np.multiply(y, np.log(y_hat)) - np.multiply((1-y), np.log(1 - y_hat))
         if verbose: print("Cost, J, associated for instance {}: {}".format(i+1,curr_cost))
         cost+=np.sum(curr_cost)
-
-        # if cost < 0:
-        #     print("fx : {} \ty : {} \tcost : {} \tcost_curr: {}".format(y_hat, y, cost, np.sum(curr_cost)))
-
     cost /= len(y_true)
     if train:
         S=0

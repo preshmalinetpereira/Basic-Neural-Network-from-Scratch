@@ -17,15 +17,11 @@ def main(k, lambd, alpha, file, dataset_name, epochs, n_features, verbose=False)
     kfold = Kfold(k, data)
     metricsByFold =[]
     for i in kfold.foldrange:
-        # print(f"For K = {i}")
         train, test = kfold.get_splits(i)
         train = pd.get_dummies(train, columns=["class"])
         test = pd.get_dummies(test, columns=["class"])
         X_train, y_train, X_test, y_test = normalize_and_split_df(train, test, n_features)
-        #initialize NN
-        # for i in range(0, X_train.shape[0], minibatch_size):
-            # X_train_mini = X_train[i:i + minibatch_size]
-            # y_train_mini = y_train[i:i + minibatch_size]
+
         network = [X_train.shape[1], 32, n_features]
 
         params = init_weights(network)
@@ -41,11 +37,9 @@ def main(k, lambd, alpha, file, dataset_name, epochs, n_features, verbose=False)
         else:
             acc, f1 = std_calculate_metrics(truth, preds)
         metricsByFold.append([acc, f1])
-        # metricsByFold.append(np.sum(np.array(metricsbymgd), axis=0)/len(metricsbymgd))
         print("Accuracy for fold-{} is {}".format(i+1, acc))
         print("F1-Score for fold-{} is {}".format(i+1, f1))
     metrics = np.sum(np.array(metricsByFold), axis=0)/k
-    # writetofile(network)
     writetofile(f"Hyperparameters for Dataset: {dataset_name} and Network {str(network)}: k: {k} | lambda: {lambd} | alpha: {alpha} | epochs(iter): {epochs} | Accuracy:{metrics[0]} | F1 Score:{metrics[1]}")
     print(f"Average Accuracy:{metrics[0]}  | F1 Score:{metrics[1]}")
 
@@ -53,8 +47,6 @@ def main(k, lambd, alpha, file, dataset_name, epochs, n_features, verbose=False)
 def testbackprop(lambd, n_features, alpha, network):
     
     params={}
-    # params["W" + str(1)] = np.array([[0.40000, 0.10000],[0.30000,0.20000]], dtype=np.float64)
-    # params["W" + str(2)] = np.array([0.70000, 0.50000, 0.60000], dtype=np.float64)
     params["W" + str(1)] = np.array([[0.42000,  0.15000,  0.40000],
     [0.72000, 0.10000, 0.54000], [0.01000, 0.19000, 0.42000], 
     [0.30000, 0.35000, 0.68000]], dtype=np.float64) 
@@ -63,9 +55,6 @@ def testbackprop(lambd, n_features, alpha, network):
 	[0.03000, 0.56000, 0.80000, 0.69000, 0.09000]], dtype=np.float64)
     params["W" + str(3)] = np.array([[0.04000, 0.87000, 0.42000, 0.53000],  
 	[0.17000, 0.10000, 0.95000, 0.69000]], dtype=np.float64)
-    
-    # X = np.array([[0.13000], [0.42000]], dtype=np.float64)
-    # y = np.array([[0.90000], [0.23000]], dtype=np.float64)
     X = np.array([[0.32000, 0.68000], [0.83000, 0.02000]], dtype=np.float64)
     y = np.array([[0.75000, 0.98000], [0.75000, 0.28000]], dtype=np.float64)
 
@@ -124,40 +113,21 @@ if __name__ == '__main__':
         file_path = 'backprop.txt'
         with open(file_path, "a") as o:
             with contextlib.redirect_stdout(o):
-                network =  [2, 4, 3, 2] #### test networks [1,2,1]
+                network =  [2, 4, 3, 2]
                 testbackprop(lambd,2, alpha, network) 
     
     elif eval =="cost":
         k = 10
         alpha=0.01
         epochs = 9000
-        # network = [13, 16, 16, 3]
-        # f = get_dataset(wine, False)
-        # file = f["file"]
-        # cost_graph(k, lambd, alpha, file, f["name"],epochs,f[n_features], network, False)
-
         alpha=0.2
         network = [16, 16, 2]
         h = get_dataset(house_votes, False)
         file = h["file"]
         cost_graph(k, lambd, alpha, file, h["name"],epochs,h[n_features], network, False)
-
-        # network = [13, 16, 16, 3]
-        # f = get_dataset(cancer, False)
-        # file = f["file"]
-        # cost_graph(k, lambd, alpha, file, f["name"],epochs,f[n_features], network, False)
     else:
         k = 10
         epochs = 5000
         f = get_dataset(cancer, False)
         file = f["file"]
         main(k, lambd, alpha, file, f["name"],epochs,f[n_features], False)
-
-        w = get_dataset(wine, False)
-        file = w["file"]
-        main(k, lambd, alpha, file, w["name"],epochs,w[n_features], False)
-
-        # h = get_dataset(house_votes, False)
-        # file = h["file"]
-        # main(k, lambd, alpha, file, h["name"],epochs,h[n_features], False)
-

@@ -88,7 +88,6 @@ def plot_graph(x,y, title, x_label, y_label):
 
 # dataset operations
 def get_dataset(name, compute):
-    # for d in datasets_dict.keys():
     file, n_features = _get_file(name, datasets_dict[name][sep],datasets_dict[name][target], datasets_dict[name][cols])
     f = {'name': name, "file": file, "n_features" : n_features}
     if type(file) !=str: 
@@ -115,28 +114,7 @@ def _get_file(name, sep, t, cols = "", compute=False):
             file = file.apply(lambda x: rep(x))
             label_column = file.pop(t)
             file.insert(len(file.columns), t, label_column)
-            
-            
         n_features = file[t].nunique()
-
-
-        # if  name == "titanic.csv" :
-        #     label_column = file.pop(target)
-        #     file.insert(len(file.columns), target, label_column)
-        #     file = file.drop("Name", axis=1)
-        #     #file = pd.get_dummies(file, columns=["Sex"])
-        #     file = categorizecolumn("Sex", file)
-
-        # if name=="loan.csv":
-        #     file = file.drop("Loan_ID", axis=1)
-        #     cols = ['Gender', "Married", "Education", "Self_Employed", "Loan_Amount_Term", "Property_Area", "Loan_Status"]
-        #     file = pd.get_dummies(file, columns=["Dependents"])
-        #     for c in cols:
-        #         file = categorizecolumn(c, file)
-
-        # if name =="parkinsons.csv":
-        #     pass
-        
     return file, n_features
 
 def rep(x):
@@ -188,8 +166,6 @@ class Kfold():
 
         datasets = self.folds.copy()
         test = pd.DataFrame(datasets.pop(i), columns=self.data_columns)
-        # X_test = test[test.columns[:-1]].to_numpy().T
-        # y_test = test[test.columns[-1]].to_numpy()
         combined = []
         for j in datasets:
             if len(combined) == 0:
@@ -197,8 +173,6 @@ class Kfold():
             else:
                 combined = np.concatenate((combined, datasets[j]), axis=0)
         train = pd.DataFrame(combined, columns=self.data_columns)
-        # X_train = combined[test.columns[:-1]].to_numpy().T
-        # y_train = combined[test.columns[-1]].to_numpy()
         
         return train, test
 
@@ -209,7 +183,6 @@ def normalize_and_split_df(train, test, n_features):
     X_test = test.iloc[:,:-n_features].apply(lambda x: (x - x.min()) / (x.max() - x.min()))
     y_test = test.iloc[:,-n_features:]
     return X_train, y_train, X_test, y_test
-    # def print_cost_function():
         
 
 
